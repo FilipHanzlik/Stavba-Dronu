@@ -3,26 +3,9 @@
 
 Servo motor1, motor2, motor3, motor4;
 
-////////////////////////////////////////////////////////////////////////////////
-//#define YAW_FLAG 1
-//#define THROTTLE_FLAG 2
-//#define PITCH_FLAG 4
-//#define ROLL_FLAG 8
-//#define AUX_FLAG 16
-//
-//#define CHANNEL1 6
-//#define CHANNEL2 7
-//#define CHANNEL3 8
-//#define CHANNEL4 9
-//#define CHANNEL5 10
-
-////////////////////////////////////////////////////////////////////////////////
-
 int PIDMAX = 400;
 const int MPU = 0x68; // Adresa chipu MPU6050 I2C
 
-//float AccError[3] = {-0.13, 0.03, 0.03}, GyroError[3] = {-1.65, -0.23, 1.04};//+0.14
-//float AccError[3] = {0.030, -0.073, 0.029}, GyroError[3] = {2.647, 0.774, -0.0102};
 float AccError[3] = {-0.052, 0.043, 0.029}, GyroError[3] = {3.445, 0.373, -0.394};       
  
 float Acc[3];
@@ -39,7 +22,6 @@ bool switched = false;
 
 float gyroangle[2];
 
-// LED_green = 15, LED_yellow = 16, LED_red = 17;
 float battery_voltage;
 
 bool D8_state, D9_state, D10_state, D11_state, D12_state;
@@ -59,6 +41,7 @@ void setup() {
   motor3.writeMicroseconds(1000);
   motor4.writeMicroseconds(1000);
 
+  // green = 15, yellow = 16, red = 17;
   DDRC |= B00001110;
 
   Wire.begin();
@@ -68,13 +51,6 @@ void setup() {
   Wire.endTransmission(true);
   
   delay(1000);
-//  calculate_IMU_error(AccError, GyroError);
-//  Serial.println(GyroError[0], 8);
-//  Serial.println(GyroError[1], 8);
-//  Serial.println(GyroError[2], 8);
-//  Serial.println(AccError[0], 8);
-//  Serial.println(AccError[1], 8);
-//  Serial.println(AccError[2], 8);
 }
 void loop() {
 
@@ -315,37 +291,3 @@ ISR(PCINT0_vect) {
     channel_vol[4] = current_time - timer_5;
   }
 }
-
-//void calculate_IMU_error(float AccError[3], float GyroError[3]){
-//  for (int i = 0; i < 300; i++) {
-//    Wire.beginTransmission(MPU);
-//    Wire.write(0x3B);
-//    Wire.endTransmission(false);
-//    Wire.requestFrom(MPU, 6, true);
-//    
-//    for (int j = 0; j < 3; j++){
-//      Acc[j] = (Wire.read() << 8 | Wire.read()) / 16384.0;
-//    }
-//    AccError[0] -= Acc[0];
-//    AccError[1] -= Acc[1];
-//    AccError[2] = 9.80665 - Acc[2];
-//  }
-//  for (int i = 0; i < 3; i++){
-//    AccError[i] /= 300;
-//    Serial.println(AccError[i]);
-//  }
-//  for (int i = 0; i < 300; i++){
-//    Wire.beginTransmission(MPU);
-//    Wire.write(0x43); // Gyro data first register address 0x43
-//    Wire.endTransmission(false);
-//    Wire.requestFrom(MPU, 6, true);
-//    for (int i = 0; i < 3; i++){
-//      Gyro[i] = (Wire.read() << 8 | Wire.read()) / 131.0;
-//      GyroError[i] -= Gyro[i];
-//    }
-//  }
-//  for (int i = 0; i < 3; i++){
-//    GyroError[i] /= 300;
-//    Serial.println(GyroError[i]);
-//  }
-//}
