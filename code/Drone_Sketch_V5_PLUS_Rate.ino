@@ -48,19 +48,14 @@ void setup() {
   Wire.write(0x00);
   Wire.endTransmission();
 
-  Wire.beginTransmission(MPU);                                      //Start communication with the address found during search.
-  Wire.write(0x1B);                                                          //We want to write to the GyroLatest_CONFIG register (1B hex)
-  Wire.write(0x08);                                                          //Set the register bits as 00001000 (500dps full scale)
-  Wire.endTransmission();                                                    //End the transmission with the GyroLatest
-
-  Wire.beginTransmission(MPU);                                      //Start communication with the address found during search.
-  Wire.write(0x1C);                                                          //We want to write to the ACCEL_CONFIG register (1C hex)
-  Wire.write(0x10);                                                          //Set the register bits as 00010000 (+/- 8g full scale range)
-  Wire.endTransmission();  
+  Wire.beginTransmission(MPU);                                      
+  Wire.write(0x1B);                                                         
+  Wire.write(0x08);                                                          
+  Wire.endTransmission();                                                    
 
   Wire.beginTransmission(MPU);                                  
-  Wire.write(0x1A); // DLPF config                                                
-  Wire.write(0x03); // 3 is 44Hz attenuation for acc and 42Hz attenuation for GyroLatest, with 4.8ms of delay oof, probs not worth it cmon
+  Wire.write(0x1A);                                                
+  Wire.write(0x03);
   Wire.endTransmission();  
 
   analogReference(DEFAULT);
@@ -83,7 +78,7 @@ void loop() {
 
   convert_input();
   
-  ratePID[0] = calculate_roll_rate_PID(Gyro[0], desRate[0]); // Vypočítání PID hodnot na odstranění změřené chyby v náklonu // why -6???
+  ratePID[0] = calculate_roll_rate_PID(Gyro[0], desRate[0]);
   ratePID[1] = calculate_pitch_rate_PID(Gyro[1], desRate[1]);
   ratePID[2] = calculate_yaw_rate_PID(Gyro[2], desRate[2]);
 
